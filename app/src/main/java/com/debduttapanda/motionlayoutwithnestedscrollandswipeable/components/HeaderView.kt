@@ -34,8 +34,8 @@ import com.debduttapanda.motionlayoutwithnestedscrollandswipeable.getStartConstr
 fun HeaderView(content: @Composable () -> Unit, process: Float) {
     MotionLayout(
         modifier = Modifier.fillMaxSize(),
-        start = getStartConstraints(),
-        end = getEndConstraints(),
+        start = getEndConstraints(),
+        end = getStartConstraints(),
         progress = process,
     ) {
 
