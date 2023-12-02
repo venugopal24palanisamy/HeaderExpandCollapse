@@ -12,8 +12,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -34,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.*
+import com.debduttapanda.motionlayoutwithnestedscrollandswipeable.animationScrollflags.MiExitUntilCollapsedState
 import com.debduttapanda.motionlayoutwithnestedscrollandswipeable.components.HeaderView
 import com.debduttapanda.motionlayoutwithnestedscrollandswipeable.ui.theme.MotionLayoutWithNestedScrollAndSwipeableTheme
 import java.util.*
@@ -61,51 +65,152 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+val MinToolbarHeight = 60.dp
+val MaxToolbarHeight = 150.dp
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMotionApi::class)
 @Composable
 fun DummyView1() {
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
+
+
+    val marioToolbarHeightRange = with(LocalDensity.current) {
+        MinToolbarHeight.roundToPx()..MaxToolbarHeight.roundToPx()
+    }
+    val toolbarState = rememberSaveable(saver = MiExitUntilCollapsedState.Saver) {
+        MiExitUntilCollapsedState(marioToolbarHeightRange)
+    }
+    val scrollState = rememberScrollState()
+    toolbarState.scrollValue = scrollState.value
+
+
     BoxWithConstraints(
         //to get the max height
         modifier = Modifier.fillMaxSize()
     ) {
-        val heightInPx = with(LocalDensity.current) { maxHeight.toPx() }
-        val nestedScrollConnection = remember {
-            object : NestedScrollConnection {
-                override fun onPreScroll(
-                    available: Offset,
-                    source: NestedScrollSource
-                ): Offset {
-                    val delta = available.y
-                    return if (delta < 0) {
-                        swipingState.performDrag(delta).toOffset()
-                    } else {
-                        Offset.Zero
+        HeaderView(content = {
+            Box(
+                modifier = Modifier
+                    .layoutId("body")
+                    .fillMaxWidth()
+                    .background(Color.White)
+            ) {
+                //content, not necessarily scrollable or list
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .border(
+                                BorderStroke(
+                                    2.dp,
+                                    Color.Gray
+                                ),
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("dassdasd")
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .border(
+                                BorderStroke(
+                                    2.dp,
+                                    Color.Gray
+                                ),
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("dassdasd")
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .border(
+                                BorderStroke(
+                                    2.dp,
+                                    Color.Gray
+                                ),
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("dassdasd")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .border(
+                                BorderStroke(
+                                    2.dp,
+                                    Color.Gray
+                                ),
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("dassdasd")
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .border(
+                                BorderStroke(
+                                    2.dp,
+                                    Color.Gray
+                                ),
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("dassdasd")
                     }
                 }
 
-                override fun onPostScroll(
-                    consumed: Offset,
-                    available: Offset,
-                    source: NestedScrollSource
-                ): Offset {
-                    val delta = available.y
-                    return swipingState.performDrag(delta).toOffset()
-                }
 
-                override suspend fun onPostFling(
-                    consumed: Velocity,
-                    available: Velocity
-                ): Velocity {
-                    swipingState.performFling(velocity = available.y)
-                    return super.onPostFling(consumed, available)
-                }
-
-                private fun Float.toOffset() = Offset(0f, this)
             }
-        }
+        }, process = toolbarState.progress)
 
-        Box(
+        /*Box(
             modifier = Modifier
                 .fillMaxSize()
                 .swipeable(
@@ -139,158 +244,8 @@ fun DummyView1() {
             }
             val startHeightNum = 150
 
-            HeaderView(content = {
-                Box(
-                    modifier = Modifier
-                        .layoutId("body")
-                        .fillMaxWidth()
-                        .background(Color.White)
-                ) {
-                    //content, not necessarily scrollable or list
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .nestedScroll(nestedScrollConnection),
-                    ) {
-                        item {
 
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        BorderStroke(
-                                            2.dp,
-                                            Color.Gray
-                                        ),
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(50.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("dassdasd")
-                            }
-                        }
-                    }
-                }
-            }, process = computedProgress)
-
-        }
+        }*/
     }
 
 }
